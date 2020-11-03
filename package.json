@@ -19,7 +19,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev:wallet": "PK=89183618e17db617ad11acc0fbf1e433d0670c70385f85f6a6aac8a53859b83b fcl-wallet"
+    "dev:wallet": "PK=f9474eb3e9dd67eb2eb74bc9e27be8bce3949e96ac118d3e0b2721f7b4ff5bcc fcl-wallet"
   },
   "eslintConfig": {
     "extends": "react-app"

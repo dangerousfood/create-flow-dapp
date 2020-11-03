@@ -5,7 +5,9 @@ import * as fcl from '@onflow/fcl'
 import DeployAndRead from './DeployAndRead'
 import Display from './Display';
 
-fcl.config().put("challenge.handshake", "http://localhost:8701/flow/authenticate")
+
+window.fcl = fcl
+
 function App() {
   return (
     <div className="App">

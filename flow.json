@@ -2,7 +2,7 @@
 	"accounts": {
 		"service": {
 			"address": "f8d6e0586b0a20c7",
-			"privateKey": "b77cf77782a4d262a09c91d71a5142cc8a8bf420bc4e824fb9023f1cd4d809b0",
+			"privateKey": "f9474eb3e9dd67eb2eb74bc9e27be8bce3949e96ac118d3e0b2721f7b4ff5bcc",
 			"sigAlgorithm": "ECDSA_P256",
 			"hashAlgorithm": "SHA3_256"
 		}
