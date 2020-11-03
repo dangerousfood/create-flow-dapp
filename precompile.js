@@ -1,4 +1,3 @@
-const { build } = require('@onflow/fcl');
 const fs = require('fs')
 
 let buildDir = process.argv[2] + "/build"

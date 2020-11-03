@@ -4,12 +4,14 @@
   "private": true,
   "dependencies": {
     "@onflow/fcl": "0.0.60",
+    "@onflow/six-set-code": "0.0.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "fs": "0.0.1-security",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-draggable": "^4.4.3",
     "react-scripts": "3.4.3"
   },
   "scripts": {
