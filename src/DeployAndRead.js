@@ -4,23 +4,30 @@ import hello from './contracts/build/HelloWorld.js'
 import script from './contracts/build/Script.js'
 import { template as setCode } from "@onflow/six-set-code"
 
-
-
 class DeployAndRead extends React.Component {
     constructor() {
       super();
-      this.state = {color: "red"};
+      this.state = {}
       this.sendTransaction = this.sendTransaction.bind(this)
       this.sendContract = this.sendContract.bind(this)
       this.sendScript = this.sendScript.bind(this)
       this.authenticate = this.authenticate.bind(this)
+      this.unauthenticate = this.unauthenticate.bind(this)
     }
 
     componentDidMount() {
+      this.unauthenticate()
     }
 
     authenticate(){
-      fcl.config().put("challenge.handshake", "http://localhost:8701/flow/authenticate").then(console.log)
+      fcl.authenticate().then((response) => {
+        this.setState({account: response.addr});
+      })
+    }
+    
+    unauthenticate(){
+      this.setState({account: undefined})
+      fcl.unauthenticate()
     }
 
     sendScript(){
@@ -28,7 +35,7 @@ class DeployAndRead extends React.Component {
     }
 
     sendContract() {
-      deployAndReadContract(hello).then((resolve, reject) => {
+      sendTransaction(hello).then((resolve, reject) => {
             this.setState({response: resolve, address: resolve.events[0].data.address});
         })
     }
@@ -44,17 +51,18 @@ class DeployAndRead extends React.Component {
           log(HelloWorld.hello())
         }
       }`
-      sendTransactionToContract(code).then(console.log)
+      sendTransaction(code).then(console.log)
     }
 
     render() {
      return (
         <React.Fragment>
-          <pre>{JSON.stringify(this.state.response, null, 2)}</pre>
-          <button onClick={this.authenticate}>authenticate</button>
+          <button onClick={this.authenticate} disabled={this.state.account !== undefined}>authenticate</button>
+          <button onClick={this.unauthenticate} disabled={this.state.account === undefined}>unauthenticate</button>
           <button onClick={this.sendScript}>send script</button>
-          <button onClick={this.sendContract}>send contract</button>
-          <button onClick={this.sendTransaction}>send transaction</button>
+          <button onClick={this.sendContract} disabled={this.state.account === undefined}>send contract</button>
+          <button onClick={this.sendTransaction} disabled={this.state.address === undefined || this.state.account === undefined}>send transaction</button>
+          <pre>{JSON.stringify(this.state.response, null, 2)}</pre>
         </React.Fragment>
      );
     }
@@ -71,7 +79,7 @@ const deployAndReadScript = async (code) => {
         return decode;
     };
  
-const deployAndReadContract = async (code) => {
+const sendTransaction = async (code) => {
     
     const response = await fcl.send([
         setCode({
@@ -83,26 +91,6 @@ const deployAndReadContract = async (code) => {
     ])
   
   try {
-    
-    return await fcl.tx(response).onceExecuted()
-  } catch (error) {
-    return error;
-  }
-}
-
-const sendTransactionToContract = async (code) => {
-    
-  const response = await fcl.send([
-      setCode({
-          proposer: fcl.currentUser().authorization,
-          authorization: fcl.currentUser().authorization,     
-          payer: fcl.currentUser().authorization,             
-          code: code,
-      })
-  ])
-
-  try {
-    
     return await fcl.tx(response).onceExecuted()
   } catch (error) {
     return error;
