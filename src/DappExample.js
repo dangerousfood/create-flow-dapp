@@ -4,12 +4,12 @@ import hello from './contracts/build/HelloWorld.js'
 import script from './contracts/build/Script.js'
 import { template as setCode } from "@onflow/six-set-code"
 
-class DeployAndRead extends React.Component {
+class DappExample extends React.Component {
     constructor() {
       super();
       this.state = {}
       this.sendTransaction = this.sendTransaction.bind(this)
-      this.sendContract = this.sendContract.bind(this)
+      this.deployContract = this.deployContract.bind(this)
       this.sendScript = this.sendScript.bind(this)
       this.authenticate = this.authenticate.bind(this)
       this.unauthenticate = this.unauthenticate.bind(this)
@@ -31,12 +31,15 @@ class DeployAndRead extends React.Component {
     }
 
     sendScript(){
-      deployAndReadScript(script)
+      sendScript(script)
     }
 
-    sendContract() {
-      sendTransaction(hello).then((resolve, reject) => {
-            this.setState({response: resolve, address: resolve.events[0].data.address});
+    deployContract() {
+      deployContract(hello).then((resolve, reject) => {
+            this.setState({
+              response: resolve,
+              address: resolve.events[0].data.address
+            });
         })
     }
 
@@ -60,16 +63,16 @@ class DeployAndRead extends React.Component {
           <button onClick={this.authenticate} disabled={this.state.account !== undefined}>authenticate</button>
           <button onClick={this.unauthenticate} disabled={this.state.account === undefined}>unauthenticate</button>
           <button onClick={this.sendScript}>send script</button>
-          <button onClick={this.sendContract} disabled={this.state.account === undefined}>send contract</button>
+          <button onClick={this.deployContract} disabled={this.state.account === undefined}>deploy contract</button>
           <button onClick={this.sendTransaction} disabled={this.state.address === undefined || this.state.account === undefined}>send transaction</button>
           <pre>{JSON.stringify(this.state.response, null, 2)}</pre>
         </React.Fragment>
      );
     }
   }
-export default DeployAndRead;
+export default DappExample;
 
-const deployAndReadScript = async (code) => {
+const sendScript = async (code) => {
         const response = await fcl.send([
                 fcl.script(code)
             ]);
@@ -79,7 +82,7 @@ const deployAndReadScript = async (code) => {
         return decode;
     };
  
-const sendTransaction = async (code) => {
+const deployContract = async (code) => {
     
     const response = await fcl.send([
         setCode({
@@ -90,6 +93,24 @@ const sendTransaction = async (code) => {
         })
     ])
   
+  try {
+    return await fcl.tx(response).onceExecuted()
+  } catch (error) {
+    return error;
+  }
+}
+
+const sendTransaction = async (code) => {
+  const authz = fcl.currentUser().authorization
+  const response = await fcl.send([
+    fcl.transaction(code),
+    fcl.proposer(authz),
+    fcl.payer(authz),
+    fcl.authorizations([
+      authz,
+    ]),
+  ])
+
   try {
     return await fcl.tx(response).onceExecuted()
   } catch (error) {
