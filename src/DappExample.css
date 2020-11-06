@@ -1,0 +1,11 @@
+html{
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.textBox {
+    height:150px;
+    border:1px solid #287EC7;
+    overflow:auto;
+}

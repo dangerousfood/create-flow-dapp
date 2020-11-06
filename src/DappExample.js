@@ -3,6 +3,7 @@ import * as fcl from '@onflow/fcl';
 import hello from './contracts/build/HelloWorld.js'
 import script from './contracts/build/Script.js'
 import { template as setCode } from "@onflow/six-set-code"
+import './DappExample.css'
 
 class DappExample extends React.Component {
     constructor() {
@@ -31,13 +32,24 @@ class DappExample extends React.Component {
     }
 
     sendScript(){
-      sendScript(script)
+      this.setState({
+        script: undefined
+      });
+      sendScript(script).then((resolve, reject) => {
+        this.setState({
+          script: resolve
+        });
+    })
     }
 
     deployContract() {
+      this.setState({
+        contract: undefined,
+        address: undefined
+      });
       deployContract(hello).then((resolve, reject) => {
             this.setState({
-              response: resolve,
+              contract: resolve,
               address: resolve.events[0].data.address
             });
         })
@@ -54,18 +66,53 @@ class DappExample extends React.Component {
           log(HelloWorld.hello())
         }
       }`
-      sendTransaction(code).then(console.log)
+      this.setState({
+        transaction: undefined
+      });
+      sendTransaction(code).then((resolve, reject) => {
+        this.setState({
+          transaction: resolve
+        });
+    })
     }
 
     render() {
      return (
         <React.Fragment>
-          <button onClick={this.authenticate} disabled={this.state.account !== undefined}>authenticate</button>
-          <button onClick={this.unauthenticate} disabled={this.state.account === undefined}>unauthenticate</button>
-          <button onClick={this.sendScript}>send script</button>
-          <button onClick={this.deployContract} disabled={this.state.account === undefined}>deploy contract</button>
-          <button onClick={this.sendTransaction} disabled={this.state.address === undefined || this.state.account === undefined}>send transaction</button>
-          <pre>{JSON.stringify(this.state.response, null, 2)}</pre>
+
+          <button onClick={this.authenticate} disabled={this.state.account !== undefined}>
+            authenticate
+          </button>
+
+          <button onClick={this.unauthenticate} disabled={this.state.account === undefined}>
+            unauthenticate
+          </button>
+
+          <pre className="textBox">
+            {JSON.stringify(this.state.script, null, 2)}
+          </pre>
+
+          <button onClick={this.sendScript}>
+            send script
+          </button>
+
+
+          <pre className="textBox">
+            {JSON.stringify(this.state.contract, null, 2)}
+          </pre>
+
+          <button onClick={this.deployContract} disabled={this.state.account === undefined}>
+            deploy contract
+          </button>
+
+          <pre className="textBox">
+            {JSON.stringify(this.state.transaction, null, 2)}
+          </pre>
+
+          <button onClick={this.sendTransaction} disabled={this.state.address === undefined || this.state.account === undefined}>
+            send transaction
+          </button>
+
         </React.Fragment>
      );
     }
@@ -76,10 +123,7 @@ const sendScript = async (code) => {
         const response = await fcl.send([
                 fcl.script(code)
             ]);
-        console.log("RESPONSE: ",response);
-        const decode = await fcl.decode(response);
-        console.log("DECODE: ", decode);
-        return decode;
+        return await fcl.decode(response);
     };
  
 const deployContract = async (code) => {
