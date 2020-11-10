@@ -35,3 +35,11 @@ flow emulator start --init
 ```
 npm run dev:wallet
 ```
+
+### Run dapp
+
+```
+npm run start
+```
+
+This should open a browser to the dev server at `http://localhost:3000`. If it does not navigate to your browser and enter the following URL [](http://localhost:3000)
