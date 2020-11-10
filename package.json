@@ -15,11 +15,11 @@
     "react-scripts": "3.4.3"
   },
   "scripts": {
-    "start": "node precompile.js ./src/contracts && react-scripts start",
+    "start": "node ./util/precompile.js ./src/contracts && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev:wallet": "PK=f9474eb3e9dd67eb2eb74bc9e27be8bce3949e96ac118d3e0b2721f7b4ff5bcc fcl-wallet"
+    "dev:wallet": "node ./util/keyRead.js | fcl-wallet"
   },
   "eslintConfig": {
     "extends": "react-app"

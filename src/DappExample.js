@@ -73,7 +73,7 @@ class DappExample extends React.Component {
         this.setState({
           transaction: resolve
         });
-    })
+      })
     }
 
     render() {

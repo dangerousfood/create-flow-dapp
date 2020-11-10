@@ -21,3 +21,10 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# keys
+flow.json
+
+# contract build
+/src/contracts/build/*
+!/src/contracts/build/.keep
