@@ -28,3 +28,6 @@ flow.json
 # contract build
 /src/contracts/build/*
 !/src/contracts/build/.keep
+
+# env
+.vscode
